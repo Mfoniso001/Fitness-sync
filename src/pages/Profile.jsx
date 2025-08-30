@@ -1,28 +1,25 @@
-import BottomNav from "../components/BottomNav";
+// src/pages/Profile.jsx
+import { useState, useEffect } from "react";
 
 export default function Profile() {
+  const [user, setUser] = useState({ name: "", email: "" });
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser) setUser(storedUser);
+  }, []);
+
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
-      <div className="flex-1 p-6">
-        <div className="text-center mb-6">
-          <div className="w-20 h-20 mx-auto rounded-full bg-gray-300"></div>
-          <h2 className="text-xl font-bold mt-2">Mfoniso</h2>
+    <div className="max-w-md mx-auto mt-12 p-6 border rounded shadow">
+      <h1 className="text-2xl font-bold mb-4">Profile</h1>
+      {user.name ? (
+        <div>
+          <p><strong>Name:</strong> {user.name}</p>
+          <p><strong>Email:</strong> {user.email}</p>
         </div>
-
-        <div className="space-y-3">
-          {["Running", "Push Ups", "Squats", "Cycling"].map((workout) => (
-            <div
-              key={workout}
-              className="bg-white p-4 rounded-xl shadow flex justify-between items-center"
-            >
-              <span>{workout}</span>
-              <span className="text-gray-400">&gt;</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <BottomNav />
+      ) : (
+        <p>No user information found. Please sign up first.</p>
+      )}
     </div>
   );
 }

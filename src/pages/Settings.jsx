@@ -1,27 +1,34 @@
-import BottomNav from "../components/BottomNav";
+// src/pages/Settings.jsx
+import { useState, useEffect } from "react";
 
 export default function Settings() {
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("darkMode") === "true";
+    setDarkMode(saved);
+    document.body.classList.toggle("dark", saved);
+  }, []);
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    localStorage.setItem("darkMode", !darkMode);
+    document.body.classList.toggle("dark", !darkMode);
+  };
+
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
-      <div className="flex-1 p-6">
-        <h2 className="text-xl font-bold mb-4">Settings</h2>
-
-        <div className="space-y-3">
-          {["Account", "Notifications", "Privacy", "Help & Support", "Log Out"].map(
-            (item) => (
-              <div
-                key={item}
-                className="bg-white p-4 rounded-xl shadow flex justify-between items-center"
-              >
-                <span>{item}</span>
-                <span className="text-gray-400">&gt;</span>
-              </div>
-            )
-          )}
-        </div>
+    <div className="max-w-md mx-auto mt-12 p-6 border rounded shadow">
+      <h1 className="text-2xl font-bold mb-4">Settings</h1>
+      <div className="flex items-center gap-2">
+        <label htmlFor="darkMode" className="font-medium">Dark Mode</label>
+        <input
+          id="darkMode"
+          type="checkbox"
+          checked={darkMode}
+          onChange={toggleDarkMode}
+          className="w-5 h-5"
+        />
       </div>
-
-      <BottomNav />
     </div>
   );
 }

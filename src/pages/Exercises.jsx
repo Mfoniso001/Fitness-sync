@@ -1,27 +1,41 @@
-import BottomNav from "../components/BottomNav";
+// src/pages/Exercises.jsx
+import React, { useState, useEffect } from "react";
+import WorkoutLog from "../components/WorkoutLog";
 
-export default function Exercises() {
+function Exercises() {
+  const [exercises, setExercises] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch exercises from WGER API on mount
+  useEffect(() => {
+    async function fetchExercises() {
+      try {
+        const res = await fetch(
+          "https://wger.de/api/v2/exercise/?language=2&limit=50"
+        );
+        const data = await res.json();
+        setExercises(data.results); // set fetched exercises
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching exercises:", error);
+        setLoading(false);
+      }
+    }
+    fetchExercises();
+  }, []);
+
+  if (loading) {
+    return <p className="p-6 text-center">Loading exercises...</p>;
+  }
+
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
-      <div className="flex-1 p-6">
-        <h2 className="text-xl font-bold mb-4">Exercises</h2>
-
-        <div className="space-y-3">
-          {["Running", "Push Ups", "Squats", "Cycling", "Plank", "Jumping Jacks"].map(
-            (exercise) => (
-              <div
-                key={exercise}
-                className="bg-white p-4 rounded-xl shadow flex justify-between items-center"
-              >
-                <span>{exercise}</span>
-                <span className="text-gray-400">&gt;</span>
-              </div>
-            )
-          )}
-        </div>
-      </div>
-
-      <BottomNav />
+    <div className="p-6">
+      <h1 className="text-3xl font-bold mb-6">Exercises</h1>
+      {/* Pass exercises to WorkoutLog */}
+      <WorkoutLog exercises={exercises} />
     </div>
   );
 }
+
+export default Exercises;
+

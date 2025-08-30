@@ -1,35 +1,43 @@
-import BottomNav from "../components/BottomNav";
+// src/pages/Dashboard.jsx
+import { useState, useEffect } from "react";
 
 export default function Dashboard() {
+  const [workouts, setWorkouts] = useState([]);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    setUser(storedUser);
+    if (storedUser) {
+      const storedWorkouts = JSON.parse(localStorage.getItem(`${storedUser.email}-workouts`)) || [];
+      setWorkouts(storedWorkouts);
+    }
+  }, []);
+
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
-      <div className="flex-1 p-6 space-y-4 overflow-y-auto">
-        <h2 className="text-xl font-bold">Hi Mfoniso 👋</h2>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-white p-4 rounded-xl shadow text-center">
-            <p className="text-sm">Calories</p>
-            <p className="text-2xl font-bold">1,863</p>
-          </div>
-          <div className="bg-white p-4 rounded-xl shadow text-center">
-            <p className="text-sm">Workouts</p>
-            <p className="text-2xl font-bold">8</p>
-          </div>
-          <div className="bg-white p-4 rounded-xl shadow col-span-2">
-            <p className="text-sm">Streak</p>
-            <p className="text-2xl font-bold">5</p>
-          </div>
+    <div className="max-w-3xl mx-auto mt-12 p-6">
+      <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+      {user ? (
+        <div>
+          <p className="mb-4">Welcome back, <strong>{user.name}</strong>!</p>
+          {workouts.length === 0 ? (
+            <p>No workouts logged yet. Go to the Exercises page to add your workouts.</p>
+          ) : (
+            <div className="space-y-4">
+              {workouts.map((w, idx) => (
+                <div key={idx} className="border p-4 rounded shadow">
+                  <p><strong>Date:</strong> {w.date}</p>
+                  {w.exercises.map((ex, i) => (
+                    <p key={i}>{ex.name}: {ex.sets} sets x {ex.reps} reps @ {ex.weight} kg</p>
+                  ))}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-
-        <button className="w-full bg-gray-200 py-3 rounded-xl font-semibold">
-          Log Workout
-        </button>
-        <button className="w-full bg-gray-200 py-3 rounded-xl font-semibold">
-          View Progress
-        </button>
-      </div>
-
-      <BottomNav />
+      ) : (
+        <p>Please sign up or log in first.</p>
+      )}
     </div>
   );
 }
