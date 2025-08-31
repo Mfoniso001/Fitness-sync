@@ -1,43 +1,41 @@
 // src/pages/Dashboard.jsx
-import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 export default function Dashboard() {
-  const [workouts, setWorkouts] = useState([]);
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    setUser(storedUser);
-    if (storedUser) {
-      const storedWorkouts = JSON.parse(localStorage.getItem(`${storedUser.email}-workouts`)) || [];
-      setWorkouts(storedWorkouts);
-    }
-  }, []);
-
   return (
-    <div className="max-w-3xl mx-auto mt-12 p-6">
-      <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
-      {user ? (
-        <div>
-          <p className="mb-4">Welcome back, <strong>{user.name}</strong>!</p>
-          {workouts.length === 0 ? (
-            <p>No workouts logged yet. Go to the Exercises page to add your workouts.</p>
-          ) : (
-            <div className="space-y-4">
-              {workouts.map((w, idx) => (
-                <div key={idx} className="border p-4 rounded shadow">
-                  <p><strong>Date:</strong> {w.date}</p>
-                  {w.exercises.map((ex, i) => (
-                    <p key={i}>{ex.name}: {ex.sets} sets x {ex.reps} reps @ {ex.weight} kg</p>
-                  ))}
-                </div>
-              ))}
-            </div>
-          )}
+    <div className="min-h-screen bg-gray-50 p-4">
+      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6 sm:p-8">
+        <h1 className="text-3xl font-bold mb-4">Welcome to Fitness Tracker</h1>
+        <p className="mb-6 text-gray-600">
+          Track your workouts, monitor progress, and explore exercises.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Link
+            to="/exercises"
+            className="bg-blue-500 text-white py-3 rounded-lg text-center font-semibold hover:bg-blue-600 transition"
+          >
+            Browse Exercises
+          </Link>
+          <Link
+            to="/history"
+            className="bg-green-500 text-white py-3 rounded-lg text-center font-semibold hover:bg-green-600 transition"
+          >
+            Workout History
+          </Link>
+          <Link
+            to="/profile"
+            className="bg-yellow-500 text-white py-3 rounded-lg text-center font-semibold hover:bg-yellow-600 transition"
+          >
+            Profile
+          </Link>
+          <Link
+            to="/settings"
+            className="bg-purple-500 text-white py-3 rounded-lg text-center font-semibold hover:bg-purple-600 transition"
+          >
+            Settings
+          </Link>
         </div>
-      ) : (
-        <p>Please sign up or log in first.</p>
-      )}
+      </div>
     </div>
   );
 }

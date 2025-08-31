@@ -1,34 +1,51 @@
-// src/pages/Settings.jsx
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
 
-export default function Settings() {
-  const [darkMode, setDarkMode] = useState(false);
+const Settings = () => {
+  const [settings, setSettings] = useState({
+    notifications: true,
+    darkMode: false,
+  });
 
-  useEffect(() => {
-    const saved = localStorage.getItem("darkMode") === "true";
-    setDarkMode(saved);
-    document.body.classList.toggle("dark", saved);
-  }, []);
+  const handleToggle = (key) => {
+    setSettings((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-    localStorage.setItem("darkMode", !darkMode);
-    document.body.classList.toggle("dark", !darkMode);
+  const handleSave = () => {
+    alert("Settings saved successfully!");
   };
 
   return (
-    <div className="max-w-md mx-auto mt-12 p-6 border rounded shadow">
+    <div className="p-6 max-w-lg mx-auto">
       <h1 className="text-2xl font-bold mb-4">Settings</h1>
-      <div className="flex items-center gap-2">
-        <label htmlFor="darkMode" className="font-medium">Dark Mode</label>
-        <input
-          id="darkMode"
-          type="checkbox"
-          checked={darkMode}
-          onChange={toggleDarkMode}
-          className="w-5 h-5"
-        />
+
+      <div className="bg-white shadow-md p-4 rounded-lg space-y-4">
+        <div className="flex justify-between items-center">
+          <span>Enable Notifications</span>
+          <input
+            type="checkbox"
+            checked={settings.notifications}
+            onChange={() => handleToggle("notifications")}
+          />
+        </div>
+
+        <div className="flex justify-between items-center">
+          <span>Dark Mode</span>
+          <input
+            type="checkbox"
+            checked={settings.darkMode}
+            onChange={() => handleToggle("darkMode")}
+          />
+        </div>
+
+        <button
+          onClick={handleSave}
+          className="mt-4 bg-green-500 text-white px-4 py-2 rounded"
+        >
+          Save Settings
+        </button>
       </div>
     </div>
   );
-}
+};
+
+export default Settings;

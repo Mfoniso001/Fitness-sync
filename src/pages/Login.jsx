@@ -1,28 +1,30 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
-const Signup = () => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSignup = (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
 
-    // ✅ Save user to localStorage (mock authentication)
-    localStorage.setItem("user", JSON.stringify({ email }));
+    const user = JSON.parse(localStorage.getItem("user"));
 
-    // Redirect to dashboard
-    navigate("/dashboard");
+    if (user && user.email === email) {
+      navigate("/dashboard");
+    } else {
+      alert("Invalid credentials. Please sign up first.");
+    }
   };
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
       <form
-        onSubmit={handleSignup}
+        onSubmit={handleLogin}
         className="bg-white p-8 rounded-lg shadow-lg w-96"
       >
-        <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
 
         <input
           type="email"
@@ -44,15 +46,15 @@ const Signup = () => {
 
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
+          className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition"
         >
-          Sign Up
+          Login
         </button>
 
         <p className="mt-4 text-center text-sm">
-          Already have an account?{" "}
-          <Link to="/login" className="text-blue-500 hover:underline">
-            Log in
+          Don’t have an account?{" "}
+          <Link to="/" className="text-blue-500 hover:underline">
+            Sign up
           </Link>
         </p>
       </form>
@@ -60,4 +62,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Login;
