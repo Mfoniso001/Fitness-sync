@@ -1,51 +1,47 @@
-import React, { useState } from "react";
+// src/components/Settings.jsx
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-const Settings = () => {
-  const [settings, setSettings] = useState({
-    notifications: true,
-    darkMode: false,
-  });
+function Settings() {
+  const navigate = useNavigate();
+  const [darkMode, setDarkMode] = useState(
+    localStorage.getItem("darkMode") === "true"
+  );
 
-  const handleToggle = (key) => {
-    setSettings((prev) => ({ ...prev, [key]: !prev[key] }));
-  };
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    localStorage.setItem("darkMode", darkMode);
+  }, [darkMode]);
 
-  const handleSave = () => {
-    alert("Settings saved successfully!");
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("user");
+    navigate("/login");
   };
 
   return (
-    <div className="p-6 max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Settings</h1>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
+      <h1 className="text-3xl font-bold mb-6">Settings</h1>
+      
+      <button
+        onClick={() => setDarkMode(!darkMode)}
+        className="px-6 py-3 bg-blue-500 text-white rounded-lg shadow mb-4 hover:bg-blue-600 transition"
+      >
+        Toggle Dark Mode
+      </button>
 
-      <div className="bg-white shadow-md p-4 rounded-lg space-y-4">
-        <div className="flex justify-between items-center">
-          <span>Enable Notifications</span>
-          <input
-            type="checkbox"
-            checked={settings.notifications}
-            onChange={() => handleToggle("notifications")}
-          />
-        </div>
-
-        <div className="flex justify-between items-center">
-          <span>Dark Mode</span>
-          <input
-            type="checkbox"
-            checked={settings.darkMode}
-            onChange={() => handleToggle("darkMode")}
-          />
-        </div>
-
-        <button
-          onClick={handleSave}
-          className="mt-4 bg-green-500 text-white px-4 py-2 rounded"
-        >
-          Save Settings
-        </button>
-      </div>
+      <button
+        onClick={handleLogout}
+        className="px-6 py-3 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 transition"
+      >
+        Logout
+      </button>
     </div>
   );
-};
+}
 
 export default Settings;

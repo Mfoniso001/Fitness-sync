@@ -1,3 +1,4 @@
+// src/App.jsx
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
@@ -6,19 +7,22 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
+import Exercises from "./pages/Exercises";
+import History from "./pages/History";
 
 function App() {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="flex-grow">
+      <main className="flex-grow p-4">
         <Routes>
           <Route path="/" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
-          {/* You can add /exercises and /history later */}
+          <Route path="/exercises" element={<Exercises />} />
+          <Route path="/history" element={<History />} />
         </Routes>
       </main>
     </div>
