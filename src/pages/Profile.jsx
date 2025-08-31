@@ -1,86 +1,63 @@
+// src/pages/Profile.jsx
 import React, { useState } from "react";
+import { useWorkout } from "../context/workoutContext";
 
-const Profile = () => {
-  const [profile, setProfile] = useState({
-    name: "Mfoniso Celestine",
-    email: "Mfonisogeorge16@email.com",
-    bio: "Fitness enthusiast 💪",
-  });
+export default function Profile() {
+  const { user, setUser, darkMode } = useWorkout();
+  const [form, setForm] = useState({ name: user.name, email: user.email });
+  const [profilePic, setProfilePic] = useState(user.profilePic || null);
 
-  const [isEditing, setIsEditing] = useState(false);
-
-  const handleChange = (e) => {
-    setProfile({ ...profile, [e.target.name]: e.target.value });
-  };
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSave = () => {
-    setIsEditing(false);
-    alert("Profile updated successfully!");
+    setUser({ ...user, ...form, profilePic });
+    alert("Profile updated!");
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => setProfilePic(reader.result);
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
-    <div className="p-6 max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Profile</h1>
+    <div className={`min-h-screen p-6 ${darkMode ? "bg-gray-900 text-gray-100" : "bg-gray-50 text-gray-900"}`}>
+      <h2 className="text-2xl font-bold mb-4">Profile</h2>
 
-      <div className="bg-white shadow-md p-4 rounded-lg">
-        <label className="block mb-2 font-semibold">Name:</label>
-        {isEditing ? (
-          <input
-            type="text"
-            name="name"
-            value={profile.name}
-            onChange={handleChange}
-            className="border p-2 w-full rounded"
-          />
-        ) : (
-          <p>{profile.name}</p>
+      <div className="mb-4">
+        <label className="block mb-2 font-medium">Profile Picture</label>
+        <input type="file" accept="image/*" onChange={handleImageUpload} />
+        {profilePic && (
+          <img src={profilePic} alt="Profile" className="mt-4 w-32 h-32 rounded-full object-cover border-2 border-gray-300" />
         )}
-
-        <label className="block mt-4 mb-2 font-semibold">Email:</label>
-        {isEditing ? (
-          <input
-            type="email"
-            name="email"
-            value={profile.email}
-            onChange={handleChange}
-            className="border p-2 w-full rounded"
-          />
-        ) : (
-          <p>{profile.email}</p>
-        )}
-
-        <label className="block mt-4 mb-2 font-semibold">Bio:</label>
-        {isEditing ? (
-          <textarea
-            name="bio"
-            value={profile.bio}
-            onChange={handleChange}
-            className="border p-2 w-full rounded"
-          />
-        ) : (
-          <p>{profile.bio}</p>
-        )}
-
-        <div className="mt-6 flex gap-4">
-          {isEditing ? (
-            <button
-              onClick={handleSave}
-              className="bg-green-500 text-white px-4 py-2 rounded"
-            >
-              Save
-            </button>
-          ) : (
-            <button
-              onClick={() => setIsEditing(true)}
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-            >
-              Edit
-            </button>
-          )}
-        </div>
       </div>
+
+      <input
+        type="text"
+        name="name"
+        placeholder="Name"
+        value={form.name}
+        onChange={handleChange}
+        className="border p-2 mb-4 w-full rounded"
+      />
+      <input
+        type="email"
+        name="email"
+        placeholder="Email"
+        value={form.email}
+        onChange={handleChange}
+        className="border p-2 mb-4 w-full rounded"
+      />
+
+      <button
+        onClick={handleSave}
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+      >
+        Save Changes
+      </button>
     </div>
   );
-};
-
-export default Profile;
+}

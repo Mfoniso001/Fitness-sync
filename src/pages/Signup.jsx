@@ -1,63 +1,88 @@
+// src/pages/Signup.jsx
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useWorkout } from "../context/workoutContext";
 
-const Signup = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+export default function Signup() {
+  const { darkMode } = useWorkout();
   const navigate = useNavigate();
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
 
-  const handleSignup = (e) => {
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    // ✅ Save user to localStorage (mock authentication)
-    localStorage.setItem("user", JSON.stringify({ email }));
-
-    // Redirect to dashboard
+    alert(`Signed up with ${form.email}`);
     navigate("/dashboard");
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <form
-        onSubmit={handleSignup}
-        className="bg-white p-8 rounded-lg shadow-lg w-96"
-      >
+    <div className={`min-h-screen flex items-center justify-center ${darkMode ? "bg-gray-900 text-gray-100" : "bg-gray-50 text-black"}`}>
+      <div className={`w-full max-w-md p-8 rounded-lg shadow-lg ${darkMode ? "bg-gray-800" : "bg-white"}`}>
         <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
+        
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            value={form.name}
+            onChange={handleChange}
+            className={`p-3 rounded border ${darkMode ? "bg-gray-700 text-gray-100 border-gray-600" : "bg-white text-black border-gray-300"}`}
+            required
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+            className={`p-3 rounded border ${darkMode ? "bg-gray-700 text-gray-100 border-gray-600" : "bg-white text-black border-gray-300"}`}
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+            className={`p-3 rounded border ${darkMode ? "bg-gray-700 text-gray-100 border-gray-600" : "bg-white text-black border-gray-300"}`}
+            required
+          />
+          <button
+            type="submit"
+            className="p-3 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+          >
+            Sign Up
+          </button>
+        </form>
 
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full mb-4 p-2 border rounded"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+        <div className="my-4 text-center">OR</div>
 
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full mb-4 p-2 border rounded"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+        <div className="flex flex-col gap-3">
+          <button className="p-3 bg-red-600 text-white rounded hover:bg-red-700 transition">
+            Sign Up with Google
+          </button>
+          <button className="p-3 bg-blue-800 text-white rounded hover:bg-blue-900 transition">
+            Sign Up with Facebook
+          </button>
+          <button className="p-3 bg-green-600 text-white rounded hover:bg-green-700 transition">
+            Sign Up with Phone Number
+          </button>
+        </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
-        >
-          Sign Up
-        </button>
-
-        <p className="mt-4 text-center text-sm">
+        <p className="mt-6 text-center">
           Already have an account?{" "}
-          <Link to="/login" className="text-blue-500 hover:underline">
-            Log in
-          </Link>
+          <span
+            className="text-blue-500 cursor-pointer hover:underline"
+            onClick={() => navigate("/login")}
+          >
+            Login
+          </span>
         </p>
-      </form>
+      </div>
     </div>
   );
-};
-
-export default Signup;
+}
